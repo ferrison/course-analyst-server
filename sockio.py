@@ -47,24 +47,25 @@ async def connect(sid, environ):
     print("connect ", sid)
     await sio.send(sid)
 
-
 @sio.on('login')
 async def message(sid, data):
-    bd[sid] = [data, 10000, 0, 0]
+    bd[sid] = [data, 100, 0, 0]
 
 
 @sio.on('buy')
 async def message(sid, data):
-    if bd[sid][1] - cur_price * 500 >= 0:
-        bd[sid][1] -= cur_price * 500
+    print('buyed',bd[sid][0])
+    if bd[sid][1] - cur_price >= 0:
+        bd[sid][1] -= cur_price
         bd[sid][2] += 1
         bd[sid][3] = 0
 
 
 @sio.on('sell')
 async def message(sid, data):
+    print('selled',bd[sid][0])
     if bd[sid][2] != 0:
-        bd[sid][1] += cur_price * 500
+        bd[sid][1] += cur_price
         bd[sid][2] -= 1
         bd[sid][3] = 0
 
@@ -72,7 +73,7 @@ async def message(sid, data):
 @sio.on('disconnect')
 def disconnect(sid):
     print('disconnect ', sid)
-
+    bd.pop(sid)
 
 async def background_task():
     global cur_price
