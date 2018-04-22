@@ -87,7 +87,7 @@ async def background_task():
                 bd[user][3] += 2
             if bd[user][3] > 10:
                 await sio.disconnect(user)
-                bd.pop(user)
+                #bd.pop(user)
         await sio.emit('message', cur_price)
         mas_out = sorted(bd.values(), key=(lambda x: x[1]), reverse=True)
         bd_out = dict(zip([i for i in range(len(mas_out))], mas_out))
